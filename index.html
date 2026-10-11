@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addison Broschell - Software Engineering Portfolio</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-pink: #f472b6;
+            --border-color: #1e293b;
+            --modal-bg: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Navigation Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 80px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            color: var(--text-main);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 24px;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent-pink);
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 80px;
+        }
+
+        h2 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-pink);
+            margin-bottom: 24px;
+        }
+
+        /* About Section */
+        .about-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .about-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            max-width: 700px;
+        }
+
+        /* Skills Section & Resume Link */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            margin-bottom: 30px;
+        }
+
+        .skill-category h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .skill-list {
+            list-style: none;
+        }
+
+        .skill-list li {
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .skill-list li::before {
+            content: "•";
+            color: var(--accent-pink);
+            position: absolute;
+            left: 0;
+        }
+
+        .resume-trigger-container {
+            margin-top: 10px;
+        }
+
+        .resume-link {
+            background: none;
+            border: none;
+            color: var(--accent-pink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+            font-family: inherit;
+            transition: opacity 0.2s;
+            display: inline-block;
+        }
+
+        .resume-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Projects, Experience & Extracurricular */
+        .project-card {
+            cursor: pointer;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+            transition: padding-left 0.2s ease;
+        }
+
+        .project-card:hover {
+            padding-left: 8px;
+        }
+
+        .project-card:first-of-type {
+            border-top: 1px solid rgba(30, 41, 59, 0.5);
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 6px;
+        }
+
+        .item-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .item-meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .item-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .experience-item {
+            margin-bottom: 24px;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 40px 0;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-pink);
+        }
+
+        .modal-subtitle {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-pink);
+            margin-bottom: 6px;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .modal-meta-header {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .modal-body h4 {
+            font-size: 1rem;
+            color: var(--text-main);
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        .modal-body p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .modal-body ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 12px;
+        }
+
+        .modal-body ul li {
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            position: relative;
+            padding-left: 18px;
+        }
+
+        .modal-body ul li::before {
+            content: "•";
+            color: var(--accent-pink);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Image Viewer inside Modal */
+        .view-images-btn {
+            background: none;
+            border: 1px solid var(--accent-pink);
+            color: var(--accent-pink);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin: 12px 0;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .view-images-btn:hover {
+            background: var(--accent-pink);
+            color: var(--bg-color);
+        }
+
+        .image-gallery {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        .image-gallery img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.2s ease;
+        }
+
+        footer a:hover {
+            color: var(--accent-pink);
+        }
+
+        @media (max-width: 600px) {
+            .about-content h1 {
+                font-size: 2rem;
+            }
+            footer {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+            footer a {
+                margin-left: 0;
+                margin-right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header / Nav -->
+        <header>
+            <div class="logo">ADDISON BROSCHELL</div>
+            <nav>
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#experience">Experience</a>
+            </nav>
+        </header>
+
+        <!-- About Me -->
+        <section id="about">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <h1>Software Engineering & Cybersecurity</h1>
+                <p>Hello! I'm Addison, a student at the University of Guelph, studying Software Engineering (Co-op) with an emphasis in Cybersecurity. I enjoy problem-solving, building, testing and designing software and hardware systems.</p>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Skills -->
+        <section id="skills">
+            <h2>Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Languages</h3>
+                    <ul class="skill-list">
+                        <li>C, C++</li>
+                        <li>JavaScript</li>
+                        <li>Python</li>
+                        <li>HTML / CSS</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Development Tools</h3>
+                    <ul class="skill-list">
+                        <li>GitHub & GitLab</li>
+                        <li>Visual Studio Code</li>
+                        <li>Linux / Unix</li>
+                        <li>Tinkercad & Figma</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Other</h3>
+                    <ul class="skill-list">
+                        <li>Agile Methodologies</li>
+                        <li>VEX IQ, Microbit, Arduino</li>
+                        <li>Pandas & Matplotlib</li>
+                        <li>Excel & PowerPoint</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="resume-trigger-container">
+                <!-- Links directly to your attached PDF -->
+                <a href="Addison Broschell Resume.pdf" target="_blank" class="resume-link">View Full Resume</a>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Projects -->
+        <section id="projects">
+            <h2>Projects</h2>
+            
+            <div class="project-card" onclick="openModal('scoobyModal')">
+                <div class="item-row">
+                    <span class="item-title">Scooby-Doo Monster Website</span>
+                    <span class="item-meta">March 2026 – Present</span>
+                </div>
+                <p class="item-desc">A multi-page website based on the Scooby-Doo universe featuring monster biographies, categorized types, and consistent themed layouts.</p>
+            </div>
+
+            <div class="project-card" onclick="openModal('drinkModal')">
+                <div class="item-row">
+                    <span class="item-title">Interactive Drink Order Application</span>
+                    <span class="item-meta">June 2025 – Present</span>
+                </div>
+                <p class="item-desc">A web-based ordering tool using JavaScript, HTML, and CSS that calculates totals and updates pricing dynamically based on user selections.</p>
+            </div>
+
+            <div class="project-card" onclick="openModal('outrunModal')">
+                <div class="item-row">
+                    <span class="item-title">Outrun (Horror-Themed Fitness App)</span>
+                    <span class="item-meta">November 2025</span>
+                </div>
+                <p class="item-desc">A team project conceptualizing a mobile application that gamifies running by utilizing the body's physiological "fight or flight" response.</p>
+            </div>
+
+            <div class="project-card" onclick="openModal('vexModal')">
+                <div class="item-row">
+                    <span class="item-title">VEX IQ Robotics Project</span>
+                    <span class="item-meta">March – June 2025</span>
+                </div>
+                <p class="item-desc">Collaborated in a team of 3 to design, build, program, and test an autonomous VEX IQ robot capable of picking up and grasping objects.</p>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Extra-Curricular & Experience -->
+        <section id="experience">
+            <h2>Experience & Leadership</h2>
+
+            <div class="experience-item">
+                <div class="item-row">
+                    <span class="item-title">National Center for Women and Information Technology</span>
+                    <span class="item-meta">April 2025 – Present</span>
+                </div>
+                <p class="item-desc">Rising Star Award Recipient / Member, recognizing aptitude in computing and strong aspirations in computer science.</p>
+            </div>
+
+            <div class="experience-item">
+                <div class="item-row">
+                    <span class="item-title">Camp Senior Leader – City of Barrie</span>
+                    <span class="item-meta">June 2024 – September 2026</span>
+                </div>
+                <p class="item-desc">Lead and support camp leaders while developing daily programming, collaborating with a team of 20 to maintain an inclusive, engaging environment.</p>
+            </div>
+
+            <div class="experience-item">
+                <div class="item-row">
+                    <span class="item-title">Server – Liberty North</span>
+                    <span class="item-meta">Sept. 2022 – Present</span>
+                </div>
+                <p class="item-desc">Deliver efficient, high-quality service in a fast-paced, high-volume environment while communicating seamlessly with guests and team members.</p>
+            </div>
+        </section>
+
+        <!-- Footer / Contact -->
+        <footer>
+            <span>Email: addibroschell@gmail.com | abrosche@uoguelph.ca</span>
+            <div>
+
+                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+                <a href="https://github.com" target="_blank">GitHub</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Scooby-Doo Monster Website Modal -->
+    <div id="scoobyModal" class="modal-overlay" onclick="outsideClose(event, 'scoobyModal')">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('scoobyModal')">&times;</button>
+            <div class="modal-subtitle">Personal Project Breakdown</div>
+            <div class="modal-title">Scooby-Doo Monster Website</div>
+            <div class="modal-meta-header">Web Development | March 2026 – Present</div>
+            <div class="modal-body">
+                <h4>Overview</h4>
+                <p>Designed and developed a multi-page website using HTML and CSS based on the Scooby-Doo universe, featuring monster biographies and different monster types.</p>
+                <h4>Highlights</h4>
+                <ul>
+                    <li>Built consistent page layouts, navigation structure, and thematic visual elements from scratch.</li>
+                    <li>Organized content categories to deliver a smooth and engaging user experience across pages.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Drink Application Modal -->
+    <div id="drinkModal" class="modal-overlay" onclick="outsideClose(event, 'drinkModal')">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('drinkModal')">&times;</button>
+            <div class="modal-subtitle">Personal Project Breakdown</div>
+            <div class="modal-title">Interactive Drink Order Application</div>
+            <div class="modal-meta-header">Web Application | June 2025 – Present</div>
+            <div class="modal-body">
+                <h4>Overview</h4>
+                <p>Developed a web-based ordering tool using JavaScript, HTML, and CSS that calculates totals based on user selection.</p>
+                <h4>Highlights</h4>
+                <ul>
+                    <li>Programmed application logic to automatically update pricing in real time when users change item sizes, flavors, or extras.</li>
+                    <li>Managed state changes smoothly on the client side for instant feedback.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Outrun Modal -->
+    <div id="outrunModal" class="modal-overlay" onclick="outsideClose(event, 'outrunModal')">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('outrunModal')">&times;</button>
+            <div class="modal-subtitle">Academic Software Engineering & Product Design</div>
+            <div class="modal-title">Outrun (Horror-Themed Fitness App)</div>
+            <div class="modal-meta-header">University of Guelph – CIS*1250 (Team of 4 | November 2025)</div>
+            <div class="modal-body">
+                <h4>The Challenge & Solution</h4>
+                <p>Traditional fitness apps rely on passive tracking. We conceptualized a mobile application that gamifies running by utilizing the body's physiological "fight or flight" response[cite: 5], transforming routine workouts into immersive audio survival simulations.</p>
+                
+                <h4>Architecture & System Design Breakdown:</h4>
+                <ul>
+                    <li><strong>Requirements & Specifications:</strong> Authored detailed functional requirements and non-functional performance benchmarks for audio modulation and real-time motion sensing.</li>
+                    <li><strong>Sensor Integration Logic:</strong> Designed the conceptual pipeline linking mobile IMUs (accelerometers/gyroscopes) to pace tracking and dynamic speed thresholds.</li>
+                    <li><strong>Interaction Design:</strong> Created high-fidelity UI mockups in Figma, focusing on a streamlined, high-exertion active interface.</li>
+                </ul>
+
+                <h4>Leadership, Process & Soft Skills:</h4>
+                <ul>
+                    <li><strong>Collaborative Systems Thinking:</strong> Worked in a 4-person team to align user psychology, technical constraints, and product documentation into a unified deliverable.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- VEX IQ Modal -->
+    <div id="vexModal" class="modal-overlay" onclick="outsideClose(event, 'vexModal')">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('vexModal')">&times;</button>
+            <div class="modal-subtitle">Robotics Engineering & Autonomous Systems</div>
+            <div class="modal-title">VEX IQ Robotics Project</div>
+            <div class="modal-meta-header">Team Engineering Project (Team of 3 | March – June 2025)</div>
+            <div class="modal-body">
+                <h4>Overview</h4>
+                <p>Collaborated with a team of 3 to design, build, program, and test a VEX IQ robot capable of picking up and grasping objects.</p>
+                
+                <h4>Architecture & Engineering Breakdown:</h4>
+                <ul>
+                    <li><strong>Task:</strong> Given the task of designing a robot capable of picking up and grasping objects; the team was responsible for drafting a design and building the robot.
+                    <li><strong>Problem-Solving & Calibration:</strong> Troubleshot and adjusted sensor logic and motor thresholds through iterative physical testing to ensure reliable object manipulation.</li>
+                </ul>
+
+                <h4>Leadership, Process & Soft Skills:</h4>
+                <ul>
+                    <li><strong>Cross-Functional Teamwork:</strong> Divided responsibilities across hardware assembly while maintaining tight communication under testing constraints.</li>
+                </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+            // Reset gallery visibility when closing modal
+            const gallery = document.getElementById('roboticsGallery');
+            if (gallery) gallery.style.display = 'none';
+        }
+
+        function outsideClose(event, modalId) {
+            if (event.target === document.getElementById(modalId)) {
+                closeModal(modalId);
+            }
+        }
+
+        function toggleGallery() {
+            const gallery = document.getElementById('roboticsGallery');
+            if (gallery.style.display === 'grid') {
+                gallery.style.display = 'none';
+            } else {
+                gallery.style.display = 'grid';
+            }
+        }
+    </script>
+</body>
+</html>
